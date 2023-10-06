@@ -38,10 +38,10 @@ public class StoreWasteDataConverter {
     public List<StoreWasteInfo> makeStoreWasteInfoList() {
         ArrayList<String> values;
         // "pusty odczyt" - wiersz nagłówków
-        String csvLine = csvReader.readCsvLine();
+        String csvLine = csvReader.readCsvLineWithCommaToPointConversion();
         StoreWasteInfo storeWasteInfo;
         int rowCounter = 0;
-        while ((csvLine= csvReader.readCsvLine())!=null) {
+        while ((csvLine= csvReader.readCsvLineWithCommaToPointConversion())!=null) {
             values = csvDecoder.getValuesFromCsvLine(csvLine);
             storeWasteInfo = makeStoreWasteInfo(values);
             storeWasteInfoList.add(storeWasteInfo);

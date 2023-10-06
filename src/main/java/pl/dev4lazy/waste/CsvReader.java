@@ -1,17 +1,30 @@
 package pl.dev4lazy.waste;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class CsvReader {
 
     private BufferedReader reader;
 
+    public void openReaderForFile1(String csvFileName) {
+        try ( FileReader fileReader = new FileReader(csvFileName);
+              BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+            reader = bufferedReader;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void openReaderForFile2(String csvFileName) {
+        try ( InputStream inputStream = new FileInputStream(csvFileName);
+              InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+            reader = bufferedReader;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    /*
     public void openReaderFromAssets(String csvFileName) {
         InputStream inputStream = null;
         InputStreamReader inputStreamReader = null;
@@ -34,6 +47,7 @@ public class CsvReader {
         }
     }
 
+
     public void openReaderFromExternalStorage(String csvFileName) {
         try {
             File directory = getDocumentDirectory();
@@ -55,8 +69,26 @@ public class CsvReader {
         // TODO
         return null;
     }
+*/
 
     public String readCsvLine() {
+        String csvLine = null;
+        try {
+            csvLine = reader.readLine();
+        } catch(IOException ex1) {
+            ex1.printStackTrace();
+            try {
+                if(reader!= null) {
+                    reader.close();
+                }
+            } catch (IOException ex2) {
+                ex2.printStackTrace();
+            }
+        }
+        return csvLine;
+    }
+
+    public String readCsvLineWithCommaToPointConversion() {
         String csvLine = null;
         try {
             csvLine = reader.readLine();
@@ -78,6 +110,7 @@ public class CsvReader {
         return csvLine;
     }
 
+    /* zamykanie BufferedReadera nie jest potzebne jeśli jest try with resources
     public void closeReader() {
         if (reader != null) {
             try {
@@ -87,5 +120,7 @@ public class CsvReader {
             }
         }
     }
+
+     */
 
 }
