@@ -13,8 +13,8 @@ public class StoreWasteDataConverter {
     private ArrayList<StoreWasteInfo> storeWasteInfoList;
 
     public StoreWasteDataConverter() {
+        csvReader = new CsvReader(inputFileName);
         csvDecoder = new CsvDecoder();
-        csvReader = new CsvReader();
         storeWasteInfoList = new ArrayList<>();
         outputCsvFile = new OutputCsvFile(); // TODO ta metoda nie robi nic
     }
@@ -37,12 +37,25 @@ public class StoreWasteDataConverter {
 
     public List<StoreWasteInfo> makeStoreWasteInfoList() {
         ArrayList<String> values;
-        // "pusty odczyt" - wiersz nagłówków
-        String csvLine = csvReader.readCsvLineWithCommaToPointConversion();
+        /* TODO
+            reader odczytuje porcję
+            parser dzieli porcję na kawałki
+            decoder interpretuje kawałek i zamienienia go na obiekt wejściowy
+            converter zamienia obiekt wejściowy na obiekt wyjściowy
+            coder zamienia obiekt wyjściowy na kawałek
+            serializer składa kawałki w porcję
+            writer zapisuje porcję
+         */
+        String csvLine = csvReader.readCsvLineWithCommaToPointConversion(); // "pusty odczyt" - wiersz nagłówków
+
         StoreWasteInfo storeWasteInfo;
         int rowCounter = 0;
+        // reader odczytuje porcje w pętli
         while ((csvLine= csvReader.readCsvLineWithCommaToPointConversion())!=null) {
-            values = csvDecoder.getValuesFromCsvLine(csvLine);
+            // parser dzieli porcję na kawałki
+            // decoder interpretuje kawałek i zamienienia go na obiekt wejściowy
+            values = csvDecoder.getValuesFromCsvLine(csvLine); // TODO TEST
+            // converter zamienia obiekt wejściowy na obiekt wyjściowy
             storeWasteInfo = makeStoreWasteInfo(values);
             storeWasteInfoList.add(storeWasteInfo);
             rowCounter++;
@@ -51,8 +64,8 @@ public class StoreWasteDataConverter {
     }
 
     public StoreWasteInfo makeStoreWasteInfo(ArrayList<String> valuesFromCsvLine ) {
-        StoreWasteInfo storeWasteInfo = new StoreWasteInfo.AnalysisRowBuilder()
-                /* TODO zgodnie z
+        StoreWasteInfo storeWasteInfo = new StoreWasteInfo.StoreWasteInfoBuilder()
+                /* TODO */
                 .store( csvDecoder.getIntegerOrNullFromString( valuesFromCsvLine.get(0)) )
                 .analysisId( 0 ) // 0 - bo zostanie wpisany później
                 .articleCode( csvDecoder.getIntegerOrNullFromString( valuesFromCsvLine.get(1)) )
@@ -69,14 +82,13 @@ public class StoreWasteDataConverter {
                 .department( valuesFromCsvLine.get(12) )
                 .sector( valuesFromCsvLine.get(13) )
 
-                 */
                 .build();
         return storeWasteInfo;
     }
 
     public void insertAllStoreWasteInfos() {
-        for (StoreWasteInfo remoteAnalysisRow : storeWasteInfoList) {
-            insertStoreWasteInfo(remoteAnalysisRow);
+        for (StoreWasteInfo storeWasteInfo : storeWasteInfoList) {
+            insertStoreWasteInfo(storeWasteInfo);
         }
     }
 

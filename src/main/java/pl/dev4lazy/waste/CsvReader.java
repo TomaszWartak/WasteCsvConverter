@@ -6,6 +6,10 @@ public class CsvReader {
 
     private BufferedReader reader;
 
+    public CsvReader( String csvFileName ) {
+        openReaderForFile3(csvFileName);
+    }
+
     public void openReaderForFile1(String csvFileName) {
         try ( FileReader fileReader = new FileReader(csvFileName);
               BufferedReader bufferedReader = new BufferedReader(fileReader)) {
@@ -15,6 +19,14 @@ public class CsvReader {
         }
     }
 
+    public void openReaderForFile3(String csvFileName) {
+        try  {
+            FileReader fileReader = new FileReader(csvFileName);
+            reader = new BufferedReader(fileReader);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
     public void openReaderForFile2(String csvFileName) {
         try ( InputStream inputStream = new FileInputStream(csvFileName);
               InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -28,10 +40,10 @@ public class CsvReader {
     public void openReaderFromAssets(String csvFileName) {
         InputStream inputStream = null;
         InputStreamReader inputStreamReader = null;
-        try { // TODO zrób try with resources
-            // TODO inputStream = assetManager.open( csvFileName );
-            inputStreamReader = new InputStreamReader( inputStream );
-            reader = new BufferedReader( inputStreamReader );
+        try ( InputStream inputStream = new FileInputStream(csvFileName);
+              InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+            reader = bufferedReader;
         } catch (Exception ex0) {
             ex0.printStackTrace();
             try {
@@ -65,10 +77,6 @@ public class CsvReader {
         }
     }
 
-    private File getDocumentDirectory() {
-        // TODO
-        return null;
-    }
 */
 
     public String readCsvLine() {
@@ -110,7 +118,8 @@ public class CsvReader {
         return csvLine;
     }
 
-    /* zamykanie BufferedReadera nie jest potzebne jeśli jest try with resources
+
+    // TODO pamietaj o zamknięciu CsvReadera
     public void closeReader() {
         if (reader != null) {
             try {
@@ -120,7 +129,5 @@ public class CsvReader {
             }
         }
     }
-
-     */
 
 }
