@@ -1,9 +1,12 @@
-package pl.dev4lazy.waste;
+package pl.dev4lazy.waste.utils;
+
+import pl.dev4lazy.waste.model.StoreWasteInfo;
+import pl.dev4lazy.waste.interfaces.Decoder;
 
 import java.util.ArrayList;
 
 
-public class CsvLineToStoreWasteInfoDecoder implements Decoder<ArrayList<String>,StoreWasteInfo>{
+public class CsvLineToStoreWasteInfoDecoder implements Decoder<ArrayList<String>, StoreWasteInfo> {
 
     @Override
     public StoreWasteInfo decode(ArrayList<String> parsedCsvLine) {

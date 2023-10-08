@@ -1,8 +1,12 @@
 package pl.dev4lazy.waste;
 
+import pl.dev4lazy.waste.model.StoreWasteDataDecompositor;
+import pl.dev4lazy.waste.utils.CsvLineToStoreWasteInfoDecoder;
+import pl.dev4lazy.waste.utils.CsvParser;
+
 public class Main {
 
-    private static StoreWasteDataConverter storeWasteDataConverter;
+    private static StoreWasteDataDecompositor storeWasteDataDecompositor;
 
     public static void main(String[] args) {
         convertWasteData( );
@@ -14,14 +18,14 @@ public class Main {
     }
 
     private static void prepareConverter() {
-        storeWasteDataConverter = new StoreWasteDataConverter(
+        storeWasteDataDecompositor = new StoreWasteDataDecompositor(
                 new CsvParser(),
                 new CsvLineToStoreWasteInfoDecoder()
         );
     }
 
     private static void convertData() {
-        storeWasteDataConverter.makeStoreWasteInfoList( );
-        storeWasteDataConverter.insertAllStoreWasteInfos();
+        storeWasteDataDecompositor.makeStoreWasteInfoList( );
+        storeWasteDataDecompositor.insertAllStoreWasteInfos();
     }
 }

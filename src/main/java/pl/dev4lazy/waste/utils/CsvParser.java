@@ -1,8 +1,10 @@
-package pl.dev4lazy.waste;
+package pl.dev4lazy.waste.utils;
+
+import pl.dev4lazy.waste.interfaces.Parser;
 
 import java.util.ArrayList;
 
-public class CsvParser implements Parser{
+public class CsvParser implements Parser {
 
     public ArrayList<String> parse(String csvLine ) {
         ArrayList<String> values = new ArrayList<>();

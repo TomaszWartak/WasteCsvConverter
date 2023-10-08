@@ -1,4 +1,4 @@
-package pl.dev4lazy.waste;
+package pl.dev4lazy.waste.interfaces;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package pl.dev4lazy.waste;
+package pl.dev4lazy.waste.utils;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;

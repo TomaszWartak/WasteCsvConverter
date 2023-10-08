@@ -3,8 +3,11 @@ package pl.dev4lazy.waste;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pl.dev4lazy.waste.model.StoreWasteDataDecompositor;
+import pl.dev4lazy.waste.utils.CsvLineToStoreWasteInfoDecoder;
+import pl.dev4lazy.waste.utils.CsvParser;
 
-class StoreWasteDataConverterTest {
+class StoreWasteDataDecompositorTest {
 
     private final String HEADER_ROW =
             "Store;Name;Region;17 09 04;15 01 03;15 01 02;15 01 01;"+
@@ -23,11 +26,11 @@ class StoreWasteDataConverterTest {
     private final String FIRST_ROW =
             "8016;Białystok Narodowych Sił Zbrojnych 3;R08;99,32;55,812;6,38;22,7;2,159;"+
             "0,04;;0,09;0,17;;1,27;;0,105;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
-    private StoreWasteDataConverter storeWasteDataConverter;
+    private StoreWasteDataDecompositor storeWasteDataDecompositor;
 
     @BeforeEach
     public void initAll() {
-        storeWasteDataConverter = new StoreWasteDataConverter(
+        storeWasteDataDecompositor = new StoreWasteDataDecompositor(
                 new CsvParser(),
                 new CsvLineToStoreWasteInfoDecoder()
         );
@@ -38,7 +41,7 @@ class StoreWasteDataConverterTest {
         // given - dane wejściowe
 
         // when - dane wyjściowe (badane)
-        String headerRow = storeWasteDataConverter.getPortion();
+        String headerRow = storeWasteDataDecompositor.getPortion();
 
         // then - badanie poprawności danych wyjściowych
         Assertions.assertThat( headerRow ).isEqualTo( HEADER_ROW );
@@ -49,8 +52,8 @@ class StoreWasteDataConverterTest {
         // given - dane wejściowe
 
         // when - dane wyjściowe (badane)
-        String portion = storeWasteDataConverter.getPortion();
-        portion = storeWasteDataConverter.getPortion();
+        String portion = storeWasteDataDecompositor.getPortion();
+        portion = storeWasteDataDecompositor.getPortion();
 
         // then - badanie poprawności danych wyjściowych
         Assertions.assertThat( portion ).isEqualTo( FIRST_ROW );

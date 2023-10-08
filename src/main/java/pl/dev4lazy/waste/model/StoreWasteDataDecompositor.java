@@ -1,35 +1,39 @@
-package pl.dev4lazy.waste;
+package pl.dev4lazy.waste.model;
+
+import pl.dev4lazy.waste.interfaces.Decoder;
+import pl.dev4lazy.waste.interfaces.Parser;
+import pl.dev4lazy.waste.utils.CsvReader;
 
 import java.util.ArrayList;
 import java.util.List;
-public class StoreWasteDataConverter {
+public class StoreWasteDataDecompositor {
 
     private final String inputFileName = "KPO_Report.csv";
     private CsvReader csvReader;
     private Parser csvParser;
     private Decoder csvDecoder;
-    private OutputCsvFile outputCsvFile;
+    private CsvWriter csvWriter;
     private ArrayList<String> headerNamesList; //todo ok: z tego coś nie bardzo korzystasz...
     private ArrayList<StoreWasteInfo> storeWasteInfoList;
 
-    public StoreWasteDataConverter(Parser parser, Decoder decoder) {
+    /* TODO
+    reader odczytuje porcję
+    parser dzieli porcję na kawałki
+    decoder interpretuje kawałek i zamienienia go na obiekt wejściowy
+    converter zamienia obiekt wejściowy na obiekt wyjściowy
+    coder zamienia obiekt wyjściowy na kawałek
+    serializer składa kawałki w porcję
+    writer zapisuje porcję
+ */
+    public StoreWasteDataDecompositor(Parser parser, Decoder decoder) {
         csvReader = new CsvReader(inputFileName);
-        this.csvParser = parser;
-        this.csvDecoder = decoder;
+        csvParser = parser;
+        csvDecoder = decoder;
         storeWasteInfoList = new ArrayList<>();
-        outputCsvFile = new OutputCsvFile(); // TODO ta metoda nie robi nic
+        csvWriter = new CsvWriter(); // TODO ta metoda nie robi nic
     }
 
     public List<StoreWasteInfo> makeStoreWasteInfoList() {
-        /* TODO
-            reader odczytuje porcję
-            parser dzieli porcję na kawałki
-            decoder interpretuje kawałek i zamienienia go na obiekt wejściowy
-            converter zamienia obiekt wejściowy na obiekt wyjściowy
-            coder zamienia obiekt wyjściowy na kawałek
-            serializer składa kawałki w porcję
-            writer zapisuje porcję
-         */
         ArrayList<String> pieces;
         StoreWasteInfo storeWasteInfo;
         String portion = getPortion(); // "pusty odczyt" - wiersz nagłówków
@@ -50,22 +54,6 @@ public class StoreWasteDataConverter {
 
     private void createHeaderNamesList( String header ) {
         headerNamesList = getPiecesFromPortion(header);
-        /* TODO USUŃ
-        headerNamesList = new ArrayList<>();
-        headerNamesList.add("store");
-        headerNamesList.add("article_code");
-        headerNamesList.add("article_name");
-        headerNamesList.add("article_store_price");
-        headerNamesList.add("article_ref_price");
-        headerNamesList.add("article_new_price");
-        headerNamesList.add("article_new_margin_percent");
-        headerNamesList.add("article_lm_price");
-        headerNamesList.add("article_obi_price");
-        headerNamesList.add("article_bricoman_price");
-        headerNamesList.add("article_local_competitor1_price");
-        headerNamesList.add("article_local_competitor2_price");
-
-         */
     }
 
     public String getPortion() {
@@ -93,7 +81,7 @@ public class StoreWasteDataConverter {
     }
 
     private void insertStoreWasteInfo( StoreWasteInfo storeWasteInfo) {
-        outputCsvFile.insertStoreWasteInfo(storeWasteInfo);
+        csvWriter.insertStoreWasteInfo(storeWasteInfo);
     }
 
 }
