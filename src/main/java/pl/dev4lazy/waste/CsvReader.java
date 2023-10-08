@@ -7,77 +7,18 @@ public class CsvReader {
     private BufferedReader reader;
 
     public CsvReader( String csvFileName ) {
-        openReaderForFile3(csvFileName);
+        openReaderForFile(csvFileName);
     }
 
-    public void openReaderForFile1(String csvFileName) {
-        try ( FileReader fileReader = new FileReader(csvFileName);
-              BufferedReader bufferedReader = new BufferedReader(fileReader)) {
-            reader = bufferedReader;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void openReaderForFile3(String csvFileName) {
-        try  {
-            FileReader fileReader = new FileReader(csvFileName);
-            reader = new BufferedReader(fileReader);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-    public void openReaderForFile2(String csvFileName) {
-        try ( InputStream inputStream = new FileInputStream(csvFileName);
-              InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
-            reader = bufferedReader;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-    /*
-    public void openReaderFromAssets(String csvFileName) {
-        InputStream inputStream = null;
-        InputStreamReader inputStreamReader = null;
-        try ( InputStream inputStream = new FileInputStream(csvFileName);
-              InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
-            reader = bufferedReader;
-        } catch (Exception ex0) {
-            ex0.printStackTrace();
-            try {
-                if (inputStreamReader != null)
-                    inputStreamReader.close();
-                if (inputStream != null)
-                    inputStream.close();
-                if (reader != null)
-                    reader.close();
-            } catch (Exception ex2) {
-                ex2.printStackTrace();
-            }
-        }
-    }
-
-
-    public void openReaderFromExternalStorage(String csvFileName) {
+    private void openReaderForFile(String csvFileName) {
         try {
-            File directory = getDocumentDirectory();
-            FileReader fileReader = new FileReader(directory + File.separator + csvFileName);
-            reader = new BufferedReader(fileReader);
-        } catch (FileNotFoundException ex0) {
-            ex0.printStackTrace();
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException ex2) {
-                ex2.printStackTrace();
-            }
+            InputStream inputStream = new FileInputStream(csvFileName);
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            reader = new BufferedReader(inputStreamReader);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
-
-*/
 
     public String readCsvLine() {
         String csvLine = null;
@@ -93,33 +34,24 @@ public class CsvReader {
                 ex2.printStackTrace();
             }
         }
-        return csvLine;
+        return cleanZWNBSP(csvLine);
     }
 
-    public String readCsvLineWithCommaToPointConversion() {
-        String csvLine = null;
-        try {
-            csvLine = reader.readLine();
-            // jeżeli część dziesiętną oddziela ",", to zamiana na "."
-            // żeby konwersja ze String na Double przeszła
-            if (csvLine!=null) {
-                csvLine = csvLine.replace(",", ".");
-            }
-        } catch(IOException ex1) {
-            ex1.printStackTrace();
-            try {
-                if(reader!= null) {
-                    reader.close();
-                }
-            } catch (IOException ex2) {
-                ex2.printStackTrace();
-            }
+    /**
+     * ZWNBSP" jest znakiem o zerowej szerokości, więc nie jest widoczny, ale ma wpływ na sposób,
+     * w jaki parser CSV traktuje ten wiersz - nie pozwala łamac wiersz.
+     * A przede wszystkim, przy porównaniach napisów pomimo, że nie jest widoczny, to jest uwzględniany,
+     * co powoduje różność napisów, które wyglądają tak samo...
+     */
+    private String cleanZWNBSP( String textToCleanZWNBSP ) {
+        if (textToCleanZWNBSP!=null) {
+            return textToCleanZWNBSP.replace("\uFEFF", "");
+        } else {
+            return null;
         }
-        return csvLine;
     }
 
-
-    // TODO pamietaj o zamknięciu CsvReadera
+    // TODO pamietaj o zamykaniu CsvReadera
     public void closeReader() {
         if (reader != null) {
             try {

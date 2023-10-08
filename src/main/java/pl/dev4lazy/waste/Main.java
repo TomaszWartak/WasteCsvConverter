@@ -14,7 +14,10 @@ public class Main {
     }
 
     private static void prepareConverter() {
-        storeWasteDataConverter = new StoreWasteDataConverter();
+        storeWasteDataConverter = new StoreWasteDataConverter(
+                new CsvParser(),
+                new CsvLineToStoreWasteInfoDecoder()
+        );
     }
 
     private static void convertData() {

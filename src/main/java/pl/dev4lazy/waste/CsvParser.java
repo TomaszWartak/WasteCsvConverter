@@ -2,10 +2,9 @@ package pl.dev4lazy.waste;
 
 import java.util.ArrayList;
 
+public class CsvParser implements Parser{
 
-public class CsvDecoder {
-
-    public ArrayList<String> getValuesFromCsvLine(String csvLine ) {
+    public ArrayList<String> parse(String csvLine ) {
         ArrayList<String> values = new ArrayList<>();
         if (!csvLine.isEmpty()) {
             /*
@@ -41,13 +40,14 @@ public class CsvDecoder {
         }
     }
 
+
     /**
-        Działanie: wycina wartość z początku linii csv
-        Argumenty: csvLine - linia csv
-        Rezultat: wartość wyciętą z początku linii csv
-        Efekty uboczne: csvLine jest pomniejszoną o wyciętą wartość
+     Działanie: wycina wartość z początku linii csv
+     Argumenty: csvLine - linia csv
+     Rezultat: wartość wyciętą z początku linii csv
+     Efekty uboczne: csvLine jest pomniejszoną o wyciętą wartość
      */
-    public String cutCsvValueFromCsvLine( StringBuilder csvLine ) {
+    private String cutCsvValueFromCsvLine( StringBuilder csvLine ) {
         if (!csvLine.toString().isEmpty()) {
             StringBuilder result = new StringBuilder();
             int delimiterPosition = csvLine.indexOf(CsvUtils.CSV_SEPARATOR);
@@ -65,29 +65,4 @@ public class CsvDecoder {
             return "";
         }
     }
-
-    public Integer getIntegerOrNullFromString(String value) {
-        if (value.isEmpty()) {
-            return null;
-        } else {
-            try {
-                return Integer.parseInt(value);
-            } catch (NumberFormatException ex) {
-                return null;
-            }
-        }
-    }
-
-    public Double getDoubleOrNullFromString(String value) {
-        if (value.isEmpty()) {
-            return null;
-        } else {
-            try {
-                return Double.parseDouble(value);
-            } catch (NumberFormatException ex) {
-                return null;
-            }
-        }
-    }
-
 }
