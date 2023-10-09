@@ -1,0 +1,7 @@
+reader odczytuje porcję (np. linię z pliku csv)
+parser dzieli porcję na kawałki
+decoder interpretuje kawałek i zamienienia go na obiekt wejściowy
+converter zamienia obiekt wejściowy na obiekt wyjściowy
+coder zamienia obiekt wyjściowy na kawałek
+serializer składa kawałki w porcję
+writer zapisuje porcję

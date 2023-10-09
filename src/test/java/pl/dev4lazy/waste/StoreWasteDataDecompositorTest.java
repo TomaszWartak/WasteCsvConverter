@@ -3,9 +3,12 @@ package pl.dev4lazy.waste;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pl.dev4lazy.waste.model.CsvInfo;
 import pl.dev4lazy.waste.model.StoreWasteDataDecompositor;
-import pl.dev4lazy.waste.utils.CsvLineToStoreWasteInfoDecoder;
+import pl.dev4lazy.waste.utils.CsvCoder;
+import pl.dev4lazy.waste.utils.CsvLineToStoreWasteInfoDecoder2;
 import pl.dev4lazy.waste.utils.CsvParser;
+import pl.dev4lazy.waste.utils.CsvSerializer;
 
 class StoreWasteDataDecompositorTest {
 
@@ -32,7 +35,9 @@ class StoreWasteDataDecompositorTest {
     public void initAll() {
         storeWasteDataDecompositor = new StoreWasteDataDecompositor(
                 new CsvParser(),
-                new CsvLineToStoreWasteInfoDecoder()
+                new CsvLineToStoreWasteInfoDecoder2( CsvInfo.getInstance() ),
+                new CsvCoder(),
+                new CsvSerializer()
         );
     }
 

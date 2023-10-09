@@ -1,23 +1,34 @@
 package pl.dev4lazy.waste.model;
 
-import pl.dev4lazy.waste.interfaces.Decoder;
-import pl.dev4lazy.waste.interfaces.Parser;
+import pl.dev4lazy.waste.interfaces.*;
 import pl.dev4lazy.waste.utils.CsvReader;
+import pl.dev4lazy.waste.utils.CsvWriter;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+
 public class StoreWasteDataDecompositor {
 
     private final String inputFileName = "KPO_Report.csv";
+    private final String outputFileName = "KPO_Report_new.csv";
+    private CsvInfo csvInfo;
     private CsvReader csvReader;
     private Parser csvParser;
     private Decoder csvDecoder;
+    private Coder csvCoder;
+    private Serializer csvSerializer;
     private CsvWriter csvWriter;
-    private ArrayList<String> headerNamesList; //todo ok: z tego coś nie bardzo korzystasz...
-    private ArrayList<StoreWasteInfo> storeWasteInfoList;
+
+    private ArrayList<String> inputCsvLineList;
+
+    private ArrayList<HashMap<String, Value>> storeWasteInfoList2;
+
+    private ArrayList<WasteCodeInfo> wasteCodeInfoList;
+
+    private ArrayList<String> outputCsvLineList;
 
     /* TODO
-    reader odczytuje porcję
+    reader odczytuje porcję (np. linię z pliku csv)
     parser dzieli porcję na kawałki
     decoder interpretuje kawałek i zamienienia go na obiekt wejściowy
     converter zamienia obiekt wejściowy na obiekt wyjściowy
@@ -25,40 +36,46 @@ public class StoreWasteDataDecompositor {
     serializer składa kawałki w porcję
     writer zapisuje porcję
  */
-    public StoreWasteDataDecompositor(Parser parser, Decoder decoder) {
+    public StoreWasteDataDecompositor(
+            Parser parser,
+            Decoder decoder,
+            Coder coder,
+            Serializer serializer ) {
+        csvInfo = CsvInfo.getInstance();
         csvReader = new CsvReader(inputFileName);
         csvParser = parser;
         csvDecoder = decoder;
-        storeWasteInfoList = new ArrayList<>();
-        csvWriter = new CsvWriter(); // TODO ta metoda nie robi nic
+        csvCoder = coder;
+        csvSerializer = serializer;
+        csvWriter = new CsvWriter(outputFileName);
+        inputCsvLineList = new ArrayList<>();
+        storeWasteInfoList2 = new ArrayList<>();
+        wasteCodeInfoList = new ArrayList<>();
+        outputCsvLineList = new ArrayList<>();
     }
 
-    public List<StoreWasteInfo> makeStoreWasteInfoList() {
-        ArrayList<String> pieces;
-        StoreWasteInfo storeWasteInfo;
-        String portion = getPortion(); // "pusty odczyt" - wiersz nagłówków
-        createHeaderNamesList( portion );
-        int rowCounter = 0;
-        // reader odczytuje porcje w pętli
-        while ((portion=getPortion()) != null) {
-            // parser dzieli porcję na kawałki
-            pieces = getPiecesFromPortion(portion); // TODO TEST
-            // decoder interpretuje kawałek po kawałku i zamienienia je na obiekty wejściowye
-            storeWasteInfo = makeStoreWasteInfo(pieces);
-            storeWasteInfoList.add(storeWasteInfo);
-            rowCounter++;
+    public void readCsvFile() {
+        csvInfo.setParsedCsvHeaderRow( csvParser.parse( csvReader.readCsvLine() ));
+        String inputCsvLine;
+        while ((inputCsvLine=getPortion()) != null) {
+            inputCsvLineList.add(inputCsvLine);
         }
         csvReader.closeReader();
-        return storeWasteInfoList;
     }
 
-    private void createHeaderNamesList( String header ) {
-        headerNamesList = getPiecesFromPortion(header);
+    public void makeStoreWasteInfoList() {
+        ArrayList<String> pieces;
+        HashMap<String, Value> storeWasteInfo;
+        for (String portion : inputCsvLineList) {
+            pieces = getPiecesFromPortion(portion);
+            storeWasteInfo = makeStoreWasteInfo(pieces);
+            storeWasteInfoList2.add(storeWasteInfo);
+        }
+        csvReader.closeReader();
     }
 
     public String getPortion() {
-        String portion = csvReader.readCsvLine();
-        return portion;
+        return csvReader.readCsvLine();
     }
 
 
@@ -66,22 +83,54 @@ public class StoreWasteDataDecompositor {
         return csvParser.parse( portion );
     }
 
-    public StoreWasteInfo makeStoreWasteInfo(ArrayList<String> pieces ) {
-        return (StoreWasteInfo)csvDecoder.decode( pieces );
+    public HashMap<String, Value>  makeStoreWasteInfo(ArrayList<String> pieces ) {
+        return (HashMap<String, Value> )csvDecoder.decode( pieces );
     }
 
-    public void insertAllStoreWasteInfos() {
-        // converter zamienia obiekt wejściowy na obiekt wyjściowy
-        // coder zamienia obiekt wyjściowy na kawałek
-//        serializer składa kawałki w porcję
-//        writer zapisuje porcję
-        for (StoreWasteInfo storeWasteInfo : storeWasteInfoList) {
-            insertStoreWasteInfo(storeWasteInfo);
+    public void makeWasteCodeInfoList() {
+        for (HashMap<String, Value> storeWasteInfo : storeWasteInfoList2) {
+            WasteCodeInfo.Builder wasteCodeInfoBuilder = initBuilder(storeWasteInfo);
+            removeNoLongerNecessaryDataFromStoreWastInfo(storeWasteInfo);
+            addWasteInfoToWasteCodeInfo(storeWasteInfo, wasteCodeInfoBuilder);
         }
     }
 
-    private void insertStoreWasteInfo( StoreWasteInfo storeWasteInfo) {
-        csvWriter.insertStoreWasteInfo(storeWasteInfo);
+    private void addWasteInfoToWasteCodeInfo(HashMap<String, Value> storeWasteInfo, WasteCodeInfo.Builder wasteCodeInfoBuilder) {
+        for ( String key: storeWasteInfo.keySet() ) {
+            WasteCodeInfo wasteCodeInfo = wasteCodeInfoBuilder.build();
+            Value value = storeWasteInfo.get( key );
+            wasteCodeInfo.setWasteCode( key );
+            wasteCodeInfo.setAmountOfWaste( (Double) value.getValue() );
+            wasteCodeInfoList.add( wasteCodeInfo );
+        }
+    }
+
+    private WasteCodeInfo.Builder initBuilder(HashMap<String, Value> storeWasteInfo) {
+        WasteCodeInfo.Builder wasteCodeInfoBuilder = new WasteCodeInfo.Builder()
+                .withStore( (String) storeWasteInfo.get( "Store").getValue() )
+                .withName( (String) storeWasteInfo.get( "Name").getValue() )
+                .withRegion( (String) storeWasteInfo.get( "Region").getValue() );
+        return wasteCodeInfoBuilder;
+    }
+
+    private void removeNoLongerNecessaryDataFromStoreWastInfo(HashMap<String, Value> storeWasteInfo) {
+        storeWasteInfo.remove( "Store" );
+        storeWasteInfo.remove( "Name" );
+        storeWasteInfo.remove( "Region" );
+    }
+
+    public void makeOutputCsvLineList() {
+        for ( WasteCodeInfo wasteCodeInfo : wasteCodeInfoList ) {
+            ArrayList<String> element = (ArrayList<String>)csvCoder.code( wasteCodeInfo );
+            outputCsvLineList.add( csvSerializer.serialize(element) );
+        }
+    }
+
+    public void saveCsvFile() {
+        for (String csvLine: outputCsvLineList) {
+            csvWriter.writeCsvLine(csvLine);
+        }
+        csvWriter.closeWriter();
     }
 
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public interface Serializer {
 
-    String serialize(ArrayList<String> pieces);
+    String serialize(ArrayList<String> elements );
 
 }
 
