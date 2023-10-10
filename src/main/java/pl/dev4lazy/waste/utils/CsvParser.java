@@ -1,7 +1,6 @@
 package pl.dev4lazy.waste.utils;
 
 import pl.dev4lazy.waste.interfaces.Parser;
-import pl.dev4lazy.waste.to_delete.StoreWasteInfo;
 
 import java.util.ArrayList;
 

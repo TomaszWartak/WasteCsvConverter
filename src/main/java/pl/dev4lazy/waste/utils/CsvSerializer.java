@@ -5,22 +5,28 @@ import pl.dev4lazy.waste.interfaces.Serializer;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+/* TODO test
+    gdy lista pieces jest pusta
+ */
+
 public class CsvSerializer implements Serializer {
 
     @Override
-    public String serialize(ArrayList<String> pieces) {
-        DecimalFormat decimalFormat = new DecimalFormat("#.00");
-        return new StringBuilder()
-                .append( pieces.get(0) )
-                .append( CsvUtils.CSV_SEPARATOR )
-                .append( pieces.get(1) )
-                .append( CsvUtils.CSV_SEPARATOR )
-                .append( pieces.get(2) )
-                .append( CsvUtils.CSV_SEPARATOR )
-                .append( pieces.get(3) )
-                .append( CsvUtils.CSV_SEPARATOR )
-                .append( pieces.get(4) )
-                .toString();
+    public String serialize(ArrayList<String> pieces, String delimiter) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String piece : pieces) {
+            stringBuilder
+                    .append( piece )
+                    .append( delimiter );
+        }
+        deleteLastDelimiter(stringBuilder);
+        return stringBuilder.toString();
+    }
+
+    private static void deleteLastDelimiter(StringBuilder stringBuilder) {
+        if (!stringBuilder.isEmpty()) {
+            stringBuilder.deleteCharAt(stringBuilder.length()-1);
+        }
     }
 
 }

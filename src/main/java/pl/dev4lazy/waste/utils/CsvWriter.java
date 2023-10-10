@@ -1,7 +1,5 @@
 package pl.dev4lazy.waste.utils;
 
-import pl.dev4lazy.waste.to_delete.StoreWasteInfo;
-
 import java.io.*;
 
 public class CsvWriter {
@@ -36,7 +34,7 @@ public class CsvWriter {
         }
     }
 
-    // TODO pamietaj o zamykaniu CsvReadera
+    // TODO pamietaj o zamykaniu CsvWritera
     public void closeWriter() {
         if (writer != null) {
             try {

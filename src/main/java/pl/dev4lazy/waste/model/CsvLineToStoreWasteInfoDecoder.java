@@ -1,27 +1,27 @@
-package pl.dev4lazy.waste.utils;
+package pl.dev4lazy.waste.model;
 
 import pl.dev4lazy.waste.interfaces.Decoder;
 import pl.dev4lazy.waste.interfaces.Value;
-import pl.dev4lazy.waste.model.CsvInfo;
-import pl.dev4lazy.waste.model.DoubleValue;
-import pl.dev4lazy.waste.model.StringValue;
+import pl.dev4lazy.waste.utils.CsvInfo;
+import pl.dev4lazy.waste.utils.DoubleValue;
+import pl.dev4lazy.waste.utils.CsvUtils;
+import pl.dev4lazy.waste.utils.StringValue;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class CsvLineToStoreWasteInfoDecoder2 implements Decoder< ArrayList<String>, HashMap<String, Value> > {
+public class CsvLineToStoreWasteInfoDecoder implements Decoder< ArrayList<String>, StoreWasteInfo > {
 
     private CsvInfo csvInfo;
 
-    public CsvLineToStoreWasteInfoDecoder2(CsvInfo csvInfo) {
+    public CsvLineToStoreWasteInfoDecoder(CsvInfo csvInfo) {
         this.csvInfo = csvInfo;
     }
 
     @Override
-    public HashMap<String, Value> decode(ArrayList<String> parsedCsvLine) {
+    public StoreWasteInfo decode(ArrayList<String> parsedCsvLine) {
         ArrayList<String> parsedCsvHeaderRow = csvInfo.getParsedCsvHeaderRow();
         parsedCsvLine = CsvUtils.replaceCommasToPoints( parsedCsvLine );
-        HashMap<String, Value> storeWasteInfo = new HashMap<>();
+        StoreWasteInfo storeWasteInfo = new StoreWasteInfo();//HashMap<>();
         for (int index = 0; index < parsedCsvLine.size(); index++) {
             String element = parsedCsvLine.get(index);
             Value value = null;

@@ -1,4 +1,4 @@
-package pl.dev4lazy.waste.utils;
+package pl.dev4lazy.waste.model;
 
 import pl.dev4lazy.waste.interfaces.Coder;
 import pl.dev4lazy.waste.model.WasteCodeInfo;
@@ -6,7 +6,7 @@ import pl.dev4lazy.waste.model.WasteCodeInfo;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class CsvCoder implements Coder< WasteCodeInfo, ArrayList<String> > {
+public class WasteCodeInfoToCsvLineCoder implements Coder< WasteCodeInfo, ArrayList<String> > {
 
     @Override
     public ArrayList<String> code(WasteCodeInfo wasteCodeInfo) {

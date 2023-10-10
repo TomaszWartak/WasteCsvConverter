@@ -1,15 +1,15 @@
 package pl.dev4lazy.waste;
 
-import pl.dev4lazy.waste.model.CsvInfo;
-import pl.dev4lazy.waste.model.StoreWasteDataDecompositor;
-import pl.dev4lazy.waste.utils.CsvCoder;
-import pl.dev4lazy.waste.utils.CsvLineToStoreWasteInfoDecoder2;
+import pl.dev4lazy.waste.utils.CsvInfo;
+import pl.dev4lazy.waste.model.StoreWasteDataConverter;
+import pl.dev4lazy.waste.model.WasteCodeInfoToCsvLineCoder;
+import pl.dev4lazy.waste.model.CsvLineToStoreWasteInfoDecoder;
 import pl.dev4lazy.waste.utils.CsvParser;
 import pl.dev4lazy.waste.utils.CsvSerializer;
 
 public class Main {
 
-    private static StoreWasteDataDecompositor storeWasteDataDecompositor;
+    private static StoreWasteDataConverter storeWasteDataConverter;
 
     public static void main(String[] args) {
         convertWasteData( );
@@ -21,19 +21,19 @@ public class Main {
     }
 
     private static void prepareConverter() {
-        storeWasteDataDecompositor = new StoreWasteDataDecompositor(
+        storeWasteDataConverter = new StoreWasteDataConverter(
                 new CsvParser(),
-                new CsvLineToStoreWasteInfoDecoder2( CsvInfo.getInstance() ),
-                new CsvCoder(),
+                new CsvLineToStoreWasteInfoDecoder( CsvInfo.getInstance() ),
+                new WasteCodeInfoToCsvLineCoder(),
                 new CsvSerializer()
         );
     }
 
     private static void convertData() {
-        storeWasteDataDecompositor.readCsvFile();
-        storeWasteDataDecompositor.makeStoreWasteInfoList( );
-        storeWasteDataDecompositor.makeWasteCodeInfoList( );
-        storeWasteDataDecompositor.makeOutputCsvLineList();
-        storeWasteDataDecompositor.saveCsvFile();
+        storeWasteDataConverter.readCsvFile();
+        storeWasteDataConverter.makeStoreWasteInfoList( );
+        storeWasteDataConverter.convertStoreInfosToWasteCodeInfos( );
+        storeWasteDataConverter.makeOutputCsvLineList();
+        storeWasteDataConverter.saveCsvFile();
     }
 }
