@@ -31,6 +31,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <!-- https://mvnrepository.com/artifact/com.ibm.icu/icu4j  -->
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>73.2</version>
+        </dependency>
+
     </dependencies>
 
 </project>
