@@ -1,4 +1,4 @@
-package pl.dev4lazy.waste.model;
+package pl.dev4lazy.waste.model_converter;
 
 import pl.dev4lazy.waste.interfaces.Value;
 

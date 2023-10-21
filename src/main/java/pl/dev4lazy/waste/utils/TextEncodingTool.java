@@ -1,33 +1,12 @@
 package pl.dev4lazy.waste.utils;
 
 import com.ibm.icu.text.CharsetDetector;
-import com.ibm.icu.text.CharsetMatch;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.CharsetEncoder;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.spi.CharsetProvider;
 
 public class TextEncodingTool {
-	  public void test(String text) {
-          try {
-              byte[] bytes = text.getBytes();
-              CharsetDetector detector = new CharsetDetector();
-              detector.setText(bytes);
-              CharsetMatch match = detector.detect();
-              String detectedCharset = match.getName();
-              System.out.println("Detected charset: " + detectedCharset);
-          } catch (Exception e) {
-              e.printStackTrace();
-          }
-	  }
 
-      public String getCharsetForText( String text  ) {
+      public static String getCharsetFromText(String text  ) {
           CharsetDetector detector = new CharsetDetector();
           detector.setText( text.getBytes() );
           return detector.detect().getName();
@@ -61,7 +40,7 @@ public class TextEncodingTool {
           }
       }*/
 
-      public String getTextWithCharset( String text, String charsetName) {
+      public static String getTextWithCharset( String text, String charsetName) {
           String result = text;
           try {
               result = new String( text.getBytes(charsetName) );

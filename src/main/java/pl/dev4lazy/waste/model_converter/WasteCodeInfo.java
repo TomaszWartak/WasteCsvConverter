@@ -1,4 +1,4 @@
-package pl.dev4lazy.waste.model;
+package pl.dev4lazy.waste.model_converter;
 
 public class WasteCodeInfo {
     private String store;

@@ -1,4 +1,4 @@
-package pl.dev4lazy.waste.model;
+package pl.dev4lazy.waste.model_converter;
 
 import pl.dev4lazy.waste.interfaces.*;
 import pl.dev4lazy.waste.utils.CsvInfo;
@@ -6,13 +6,9 @@ import pl.dev4lazy.waste.utils.CsvReader;
 import pl.dev4lazy.waste.utils.CsvUtils;
 import pl.dev4lazy.waste.utils.CsvWriter;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-
-/* TODO można zrobić klasę CsvData, która zawierała by sparsowane (lub nie) nagłowek i listę wierszy.
-    Ustawiało by się, czy ma wiersz nagłowka i ew. jakies inne tematy.
-    Pytanie, czy to jest efektywne, takie tworzenie rozbudowanych struktur, zamiast w locie odczytywac parsować, i dekodować,
-    a później w drugą stronę...
- */
+import java.util.Map;
 
 public class StoreWasteDataConverter {
 
@@ -34,27 +30,18 @@ public class StoreWasteDataConverter {
 
     private ArrayList<String> outputCsvLineList;
 
-    /* TODO
-    reader odczytuje porcję (np. linię z pliku csv)
-    parser dzieli porcję na kawałki
-    decoder interpretuje kawałek i zamienienia go na obiekt wejściowy
-    converter zamienia obiekt wejściowy na obiekt wyjściowy
-    coder zamienia obiekt wyjściowy na kawałek
-    serializer składa kawałki w porcję
-    writer zapisuje porcję
-    */
     public StoreWasteDataConverter(
             Parser parser,
             Decoder decoder,
             Coder coder,
             Serializer serializer ) {
         csvInfo = CsvInfo.getInstance();
-        csvReader = new CsvReader(inputFileName);
+        csvReader = new CsvReader(inputFileName, StandardCharsets.ISO_8859_1.displayName());
         csvParser = parser;
         csvDecoder = decoder;
         csvCoder = coder;
         csvSerializer = serializer;
-        csvWriter = new CsvWriter(outputFileName);
+        csvWriter = new CsvWriter(outputFileName, StandardCharsets.ISO_8859_1.displayName());
         inputCsvLineList = new ArrayList<>();
         storeWasteInfoList = new ArrayList<>();
         wasteCodeInfoList = new ArrayList<>();
@@ -105,11 +92,10 @@ public class StoreWasteDataConverter {
     }
 
     private WasteCodeInfo.Builder initBuilder(StoreWasteInfo storeWasteInfo) {
-        WasteCodeInfo.Builder wasteCodeInfoBuilder = new WasteCodeInfo.Builder()
+        return new WasteCodeInfo.Builder()
                 .withStore( (String) storeWasteInfo.get( "Store").getValue() )
                 .withName( (String) storeWasteInfo.get( "Name").getValue() )
                 .withRegion( (String) storeWasteInfo.get( "Region").getValue() );
-        return wasteCodeInfoBuilder;
     }
 
     private void removeNoLongerNecessaryDataFromStoreWastInfo(StoreWasteInfo storeWasteInfo) {

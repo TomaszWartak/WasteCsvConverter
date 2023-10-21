@@ -1,7 +1,6 @@
-package pl.dev4lazy.waste.model;
+package pl.dev4lazy.waste.model_converter;
 
 import pl.dev4lazy.waste.interfaces.Coder;
-import pl.dev4lazy.waste.model.WasteCodeInfo;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

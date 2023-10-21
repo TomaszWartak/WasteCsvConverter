@@ -1,4 +1,4 @@
-package pl.dev4lazy.waste.model;
+package pl.dev4lazy.waste.model_converter;
 
 import pl.dev4lazy.waste.interfaces.Decoder;
 import pl.dev4lazy.waste.interfaces.Value;
@@ -21,7 +21,7 @@ public class CsvLineToStoreWasteInfoDecoder implements Decoder< ArrayList<String
     public StoreWasteInfo decode(ArrayList<String> parsedCsvLine) {
         ArrayList<String> parsedCsvHeaderRow = csvInfo.getParsedCsvHeaderRow();
         parsedCsvLine = CsvUtils.replaceCommasToPoints( parsedCsvLine );
-        StoreWasteInfo storeWasteInfo = new StoreWasteInfo();//HashMap<>();
+        StoreWasteInfo storeWasteInfo = new StoreWasteInfo();
         for (int index = 0; index < parsedCsvLine.size(); index++) {
             String element = parsedCsvLine.get(index);
             Value value = null;
@@ -32,7 +32,7 @@ public class CsvLineToStoreWasteInfoDecoder implements Decoder< ArrayList<String
                     break;
                 }
                 default : {
-                    if ((element!=null) && (element!="")) {
+                    if ((element!=null) && (!element.equals(""))) {
                         value = new DoubleValue();
                         value.setValue(CsvUtils.getDoubleOrNullFromString(element));
                     }

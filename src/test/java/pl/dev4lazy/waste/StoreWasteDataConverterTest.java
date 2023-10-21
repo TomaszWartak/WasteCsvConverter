@@ -4,9 +4,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.dev4lazy.waste.utils.CsvInfo;
-import pl.dev4lazy.waste.model.StoreWasteDataConverter;
-import pl.dev4lazy.waste.model.WasteCodeInfoToCsvLineCoder;
-import pl.dev4lazy.waste.model.CsvLineToStoreWasteInfoDecoder;
+import pl.dev4lazy.waste.model_converter.StoreWasteDataConverter;
+import pl.dev4lazy.waste.model_converter.WasteCodeInfoToCsvLineCoder;
+import pl.dev4lazy.waste.model_converter.CsvLineToStoreWasteInfoDecoder;
 import pl.dev4lazy.waste.utils.CsvParser;
 import pl.dev4lazy.waste.utils.CsvSerializer;
 
@@ -42,7 +42,7 @@ class StoreWasteDataConverterTest {
     }
 
     @Test
-    public void getPortion__Should_return_header_row() {
+    void getPortion__Should_return_header_row() {
         // given - dane wejściowe
 
         // when - dane wyjściowe (badane)
@@ -53,7 +53,7 @@ class StoreWasteDataConverterTest {
     }
 
     @Test
-    public void getPortion__Should_return_first_row__When_second_portion_is_red() {
+    void getPortion__Should_return_first_row__When_second_portion_is_red() {
         // given - dane wejściowe
 
         // when - dane wyjściowe (badane)

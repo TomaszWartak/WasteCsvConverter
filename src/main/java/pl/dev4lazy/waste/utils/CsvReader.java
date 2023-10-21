@@ -1,29 +1,47 @@
 package pl.dev4lazy.waste.utils;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class CsvReader {
 
     private BufferedReader reader;
-
-    public CsvReader( String csvFileName ) {
-        openReaderForFile(csvFileName);
+    private String charsetNameFromText ="";
+    public CsvReader( String csvFileName, String charsetName ) {
+        openReaderForFile(csvFileName,charsetName);
     }
 
-    private void openReaderForFile(String csvFileName) {
+    private void openReaderForFile(String csvFileName, String charsetName ) {
         try {
             InputStream inputStream = new FileInputStream(csvFileName);
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            InputStreamReader inputStreamReader;
+            if (charsetName.isEmpty()) {
+                inputStreamReader = new InputStreamReader(inputStream );
+            } else {
+                inputStreamReader = new InputStreamReader(inputStream, charsetName);
+            }
             reader = new BufferedReader(inputStreamReader);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
+    public ArrayList<String> readAllCsvLines() {
+        ArrayList<String> allCsvLines = new ArrayList<>();
+        String csvLine;
+        while ((csvLine = readCsvLine()) != null) {
+            allCsvLines.add(csvLine);
+        }
+        return allCsvLines;
+    }
+
     public String readCsvLine() {
         String csvLine = null;
         try {
             csvLine = reader.readLine();
+            if (charsetNameFromText.isEmpty()) {
+                charsetNameFromText = TextEncodingTool.getCharsetFromText(csvLine);
+            }
         } catch(IOException ex1) {
             ex1.printStackTrace();
             try {
@@ -62,4 +80,7 @@ public class CsvReader {
         }
     }
 
+    public String getCharsetNameFromText() {
+        return charsetNameFromText;
+    }
 }

@@ -5,13 +5,18 @@ import java.io.*;
 public class CsvWriter {
 
     private BufferedWriter writer;
-    public CsvWriter( String csvFileName ) {
-        openWriterForFile(csvFileName);
+    public CsvWriter( String csvFileName, String charsetName ) {
+        openWriterForFile(csvFileName,charsetName);
     }
-    private void openWriterForFile(String csvFileName) {
+    private void openWriterForFile(String csvFileName, String charsetName) {
         try {
             OutputStream outputStream = new FileOutputStream(csvFileName);
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+            OutputStreamWriter outputStreamWriter;
+            if (charsetName.isEmpty()) {
+                outputStreamWriter = new OutputStreamWriter(outputStream);
+            } else {
+                outputStreamWriter = new OutputStreamWriter(outputStream, charsetName);
+            }
             writer = new BufferedWriter(outputStreamWriter);
         } catch (Exception ex) {
             ex.printStackTrace();

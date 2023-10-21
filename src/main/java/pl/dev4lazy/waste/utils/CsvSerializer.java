@@ -2,12 +2,8 @@ package pl.dev4lazy.waste.utils;
 
 import pl.dev4lazy.waste.interfaces.Serializer;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-/* TODO test
-    gdy lista pieces jest pusta
- */
 
 public class CsvSerializer implements Serializer {
 
