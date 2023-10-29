@@ -3,6 +3,8 @@ package pl.dev4lazy.waste.utils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.nio.charset.StandardCharsets;
 
@@ -55,4 +57,30 @@ class TextEncodingToolTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    void getSystemEncoding() {
+        System.out.println(System.getProperty("file.encoding"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"UTF-8",
+            "UTF-16",
+            "UTF-32",
+            "ISO-8859-1",
+            "ISO-8859-2",
+            "ISO-8859-3",
+            "Windows-1250",
+            "Windows-1251",
+            "US-ASCII",
+            "CP437",
+            "CP1252",
+            "Shift-JIS",
+            "EUC-JP",
+            "ISO-2022-JP" })
+    void differentEncodings(String charset) {
+        String text = "ąćęłńóśżźĄĆĘŁŃÓŚŻŹ";
+        System.out.println(charset+","+textEncodingTool.getTextWithCharset( text, charset ) );
+    }
+
 }
